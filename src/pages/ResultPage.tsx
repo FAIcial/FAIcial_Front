@@ -94,7 +94,7 @@ export default function ResultPage() {
             )}
           </div>
 
-          <p className={styles.summary}>😎 사진의 정면 유무, 명암에 따라 결과가 달라질 수 있습니다. 😎</p>
+          <p className={styles.summary}>사진의 명암에 따라 결과가 달라질 수 있습니다. 😎</p>
 
           <button
             className={styles.highlightButton}

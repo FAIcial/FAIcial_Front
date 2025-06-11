@@ -193,10 +193,10 @@ button {
   
     .resultBox {
     width: 100%;
-    max-width: 320px;
+    max-width: 400px;
     height: auto;
-    max-height: 320px; /* 이미지 너무 커지는 것 방지 */
-    padding: 16px;
+    max-height: 400px; /* 이미지 너무 커지는 것 방지 */
+    padding: 5px;
     box-sizing: border-box;
     overflow: hidden;
     }
