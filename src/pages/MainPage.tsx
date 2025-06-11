@@ -7,6 +7,7 @@ export default function MainPage() {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [flipped, setFlipped] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null); // 업로드한 파일 저장
   const navigate = useNavigate();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,27 +18,57 @@ export default function MainPage() {
       img.src = imageUrl;
       img.onload = () => {
         setPreviewImage(imageUrl);
+        setSelectedFile(file); // 파일 저장
       };
     }
   };
 
-  const handleStartAnalysis = () => {
-    if (!previewImage) return;
+  const handleStartAnalysis = async () => {
+    if (!selectedFile) return;
     setLoading(true);
 
-    // 이미지 저장
-    localStorage.setItem('FAIcialImage', previewImage);
+    const formData = new FormData();
+    formData.append('image', selectedFile);
 
-    const flipInterval = setInterval(() => {
-      setFlipped(prev => !prev);
-    }, 500);
+    try {
+      const response = await fetch('http://localhost:5000/analyze', {
+        method: 'POST',
+        body: formData,
+      });
 
-    setTimeout(() => {
-      clearInterval(flipInterval);
-      setFlipped(false);
+      if (!response.ok) {
+        throw new Error('서버 전송 실패');
+      }
+
+      const result = await response.json();
+      console.log('Flask 응답:', result);
+
+      // 원래대로 애니메이션 & 페이지 이동
+      localStorage.setItem('FAIcialImage', previewImage!);
+
+      const flipInterval = setInterval(() => {
+        setFlipped(prev => !prev);
+      }, 500);
+
+      setTimeout(() => {
+        clearInterval(flipInterval);
+        setFlipped(false);
+        setLoading(false);
+        navigate('/result', {
+          state: {
+            finalScore: result.final_score,
+            finalScores: result.final_socres,
+            partsImages: result.parts_images,
+            resultImage: result.result_image,
+            totalDistance: result.total_distance
+          }
+        });
+      }, 6000);
+    } catch (err) {
+      console.error('이미지 전송 오류:', err);
+      alert('이미지 분석 요청 중 오류가 발생했습니다.');
       setLoading(false);
-      navigate('/result');
-    }, 6000);
+    }
   };
 
   return (

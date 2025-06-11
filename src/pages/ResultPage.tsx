@@ -1,6 +1,6 @@
 // ResultPage.tsx
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styles from '../styles/ResultPage.module.css';
 import ResultDetailSlideUp from '../components/ResultDetailSlideUp';
 
@@ -8,9 +8,28 @@ export default function ResultPage() {
   const navigate = useNavigate();
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [showDetail, setShowDetail] = useState(false); // ✅ 슬라이드업 상태
+  const location = useLocation();
+
+  const [finalScores, setFinalScores] = useState<Record<string, number>>({});
+  const [totalDistance, setTotalDistance] = useState<Record<string, number>>({});
+  const [partsImages, setPartsImages] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    const storedImage = localStorage.getItem('FAIcialImage');
+    if (!location.state) return;
+
+    const state = location.state as {
+      finalScore?: number;
+      finalScores?: Record<string, number>;
+      partsImages?: Record<string, string>;
+      resultImage?: string;
+      totalDistance?: Record<string, number>
+    };
+    if (state.finalScores) setFinalScores(state.finalScores);
+    if (state.totalDistance) setTotalDistance(state.totalDistance);
+    if (state.partsImages) setPartsImages(state.partsImages);
+
+    // const storedImage = localStorage.getItem('FAIcialImage');
+    const storedImage = state.resultImage
     if (storedImage) {
       setImageSrc(storedImage);
     }
@@ -35,7 +54,7 @@ export default function ResultPage() {
     const shareData = {
       title: 'FAIcial 결과',
       text: 'AI가 분석한 내 얼굴 대칭 결과를 확인해보세요!',
-      url: window.location.href,
+      url: 'localhost:5173', // 추후 배포 도메인으로 변경 예정
     };
 
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -49,7 +68,7 @@ export default function ResultPage() {
     } else {
       try {
         await navigator.clipboard.writeText(shareData.url);
-        alert('📎 공유 링크가 복사되었어요!\n분석 결과를 친구들에게 공유 해보세요 😊');
+        alert('📎 공유 링크가 복사되었어요!\nFAIcial을 친구들에게 공유 해주세요 😊');
       } catch (err) {
         alert('링크 복사에 실패했어요 😢');
       }
@@ -75,7 +94,7 @@ export default function ResultPage() {
             )}
           </div>
 
-          <p className={styles.summary}>멋져요! AI가 인정한 대칭 얼굴입니다 😎</p>
+          <p className={styles.summary}>😎 사진의 정면 유무, 명암에 따라 결과가 달라질 수 있습니다. 😎</p>
 
           <button
             className={styles.highlightButton}
@@ -94,7 +113,12 @@ export default function ResultPage() {
 
       {/* ✅ 슬라이드업 표시 */}
       {showDetail && (
-        <ResultDetailSlideUp onClose={() => setShowDetail(false)} />
+        <ResultDetailSlideUp 
+        onClose={() => setShowDetail(false)}
+        finalScores={finalScores}
+        totalDistance={totalDistance}
+        partsImages={partsImages}
+        />
       )}
     </div>
   );
