@@ -18,6 +18,10 @@ jobs:
         with:
           node-version: 18
 
+      - name: Create .env file
+        run: |
+          echo "VITE_API_URL=http://${{ secrets.EC2_PUBLIC_IP }}:5000" > .env
+
       - name: Install dependencies and build
         run: |
           npm install
