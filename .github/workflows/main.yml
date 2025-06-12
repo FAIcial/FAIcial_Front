@@ -1,4 +1,4 @@
-name: Deploy Vite React App to S3
+name: Deploy Vite React App to S3 and Invalidate CloudFront
 
 on:
   push:
@@ -16,11 +16,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Create .env file
         run: |
-          echo "VITE_API_URL=http://${{ secrets.EC2_PUBLIC_IP }}:5000" > .env
+          echo "VITE_API_URL=https://${{ secrets.EC2_PUBLIC_IP }}" > .env
 
       - name: Install dependencies and build
         run: |
@@ -37,3 +37,13 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           SOURCE_DIR: dist
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}

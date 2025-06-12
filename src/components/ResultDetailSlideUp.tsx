@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import styles from '../styles/ResultDetailSlideUp.module.css';
 
 interface Props {
@@ -65,7 +65,7 @@ export default function ResultDetailSlideUp({
 
     });
   }, [metricDataList]);
-
+  console.log('🔍 metricDataList', metricDataList);
   return (
     <div className={`${styles.slideUpContainer} ${visible ? styles.show : ''}`}>
       <div className={styles.slideCard}>
