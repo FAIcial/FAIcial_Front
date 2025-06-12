@@ -24,9 +24,6 @@ export default function ResultPage() {
       resultImage?: string;
       totalDistance?: Record<string, number>;
     };
-    console.log(`state.finalScores: `, state.finalScores);
-    console.log(`state.totalDistance: `, state.totalDistance);
-    console.log(`state.part_images : `, state.totalDistance);
 
     if (state.finalScores) setFinalScores(state.finalScores);
     if (state.totalDistance) setTotalDistance(state.totalDistance);
@@ -77,9 +74,7 @@ export default function ResultPage() {
       }
     }
   };
-  console.log(`finalscores: `, finalScores);
-  console.log(`totalDistance: `, totalDistance);
-  console.log(`part_images : `, partsImages);
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
