@@ -167,3 +167,122 @@ export FLASK_ENV=development    # 개발 모드 활성화 (선택)
 - **FAIcial 서비스**의 백엔드 핵심 모듈로서 안정적 얼굴 대칭 분석 API 제공
 - 프론트엔드 및 모바일 앱에서 실시간 결과 렌더링 연동 지원
 - 향후 Docker 및 CI/CD 통합으로 배포 자동화 구축
+
+
+---
+
+# 🎨 FAIcial\_Front
+
+👁‍🗨 **FAIcial 프로젝트**의 프론트엔드: 얼굴 이미지를 업로드하고, 대칭 분석 결과를 확인하고, 공유할 수 있는 웹 애플리케이션입니다.
+
+---
+
+## 📌 프로젝트 개요
+
+FAIcial\_Front는 사용자가 정면 얼굴 사진을 업로드하면, Flask 기반 백엔드 서버로 이미지를 전송하고 분석 결과를 **시각적으로 보여주는** React 기반 SPA입니다.
+결과는 점수, 얼굴 부위별 대칭 이미지, 시각화된 결과 이미지와 함께 제공됩니다.
+
+---
+
+## 🛠️ 사용 기술 스택
+
+| 기술               | 설명                       |
+| ---------------- | ------------------------ |
+| **React 18**     | UI 개발을 위한 프론트엔드 프레임워크    |
+| **TypeScript**   | 정적 타입 언어로 코드 안정성 확보      |
+| **Vite**         | 빠른 개발 환경 구성 및 번들링 도구     |
+| **CSS Module**   | 페이지 단위 스타일 분리            |
+| **React Router** | SPA 라우팅 처리               |
+| **Fetch API**    | Flask 서버와 이미지 전송 및 결과 수신 |
+
+---
+
+## 📁 폴더 구조
+
+```plaintext
+FAIcial_Front/
+├── public/                     # 정적 리소스 (로고, 아이콘 등)
+│   └── assets/                 # 이미지 리소스 관리
+│       ├── face_icon.png
+│       ├── FAIcial_logo.png
+│       └── ...
+├── src/                        # 소스 코드 폴더
+│   ├── components/             # 공통 UI 컴포넌트
+│   │   └── ResultDetailSlideUp.tsx
+│   ├── pages/                  # 주요 페이지 (화면 단위 구성)
+│   │   ├── StartPage.tsx
+│   │   ├── LoadingPage.tsx
+│   │   ├── MainPage.tsx
+│   │   └── ResultPage.tsx
+│   ├── styles/                 # 각 페이지별 CSS 모듈
+│   │   ├── StartScreen.module.css
+│   │   ├── MainPage.module.css
+│   │   └── ...
+│   ├── App.tsx                 # 전체 라우팅 및 구조 설정
+│   ├── App.css
+│   ├── index.css               # 글로벌 스타일
+│   └── main.tsx                # 진입점
+├── .gitignore
+├── index.html
+├── package.json
+├── vite.config.ts
+└── README.md
+```
+
+---
+
+## 🌐 배포 주소
+
+* [https://faicial.site](https://faicial.site)
+
+---
+
+## ⚙️ 설치 및 실행 방법
+
+```bash
+# 1. 리포지토리 클론
+git clone https://github.com/your-org/FAIcial_Front.git
+cd FAIcial_Front
+
+# 2. 패키지 설치
+npm install
+
+# 3. 개발 서버 실행
+npm run dev
+
+# 기본 주소: http://localhost:5173
+```
+
+
+---
+
+## 🧪 주요 기능
+
+* 얼굴 이미지 업로드 및 미리보기
+* Flask 서버로 이미지 POST 요청 → 대칭 분석 결과 수신
+* 분석 결과 시각화 (점수 + 얼굴 부위별 이미지)
+* 결과 저장 및 공유 기능
+* 공유 썸네일/타이틀 설정 (Open Graph 메타 태그 적용)
+
+---
+
+## 📸 썸네일 메타 설정
+
+* `public/index.html`의 `<head>` 태그에 메타 태그를 삽입하여 공유 시 이미지, 제목, 설명이 노출됩니다.
+* 썸네일 이미지는 `public/assets/thumbnail.png`에 저장되어 있습니다.
+
+```html
+<meta property="og:title" content="안면 비대칭 테스트: FAIcial" />
+<meta property="og:description" content="나의 안면 대칭률은 몇 %일까?" />
+<meta property="og:image" content="https://faicial.com/assets/thumbnail.png" />
+<meta property="og:url" content="https://faicial.com" />
+<meta name="twitter:card" content="summary_large_image" />
+```
+
+---
+
+## ✅ 향후 개발 계획
+
+* 📱 모바일 UI 완성도 향상
+* 🔄 분석 결과 공유 시 실제 결과 이미지와 점수 포함
+* 🏥 얼굴 비대칭 정도에 따라 성형외과 연결 or 운동법 추천 기능 확장
